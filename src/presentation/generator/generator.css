@@ -1,0 +1,216 @@
+/* ── Generator section styles ───────────────────────────────────────── */
+
+.generator-view {
+  padding: 1.5rem;
+  font-family: system-ui, sans-serif;
+}
+
+/* Form */
+.generator-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.generator-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.generator-form__field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.generator-form__field input[type='number'],
+.generator-form__field select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.generator-form__field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.generator-form__field--checkbox label {
+  margin: 0;
+}
+
+.generator-form__actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn--primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn--secondary {
+  background: #6b7280;
+  color: #fff;
+}
+
+/* Boards grid */
+.boards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── Board card: marco PNG temático + grid/título superpuestos ─────────────
+   El marco (dinos, volcán, plantas, borde y la regla "Gana quien…") es la
+   IMAGEN de fondo. Sobre ella se posicionan, en coordenadas relativas, solo
+   las dos cosas que cambian por cartón: el título y los números del grid.
+
+   Las variables --grid-* y --title-* definen la "ventana" del marco donde
+   entran. Se ajustan una vez contra el PNG real (por screenshot) y listo.
+   ───────────────────────────────────────────────────────────────────────── */
+.board-card {
+  container-type: inline-size; /* habilita unidades cqw para el texto */
+  position: relative;
+  aspect-ratio: var(--frame-ratio, 1122 / 1402); /* proporción del PNG */
+  background-image: var(--frame-src, url('/card-frame.png'));
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  page-break-inside: avoid;
+  break-inside: avoid;
+
+  /* Ventana de la grilla dentro del marco. Medida sobre el PNG real
+     (las cajas ya están dibujadas en el arte; acá solo van los números).
+     Valores por defecto = marco 4x4. */
+  --grid-top: 25.5%;
+  --grid-left: 11.8%;
+  --grid-width: 77.5%;
+  --grid-height: 63.1%;
+}
+
+/* Modo 3x3: otro marco y otra ventana (medidos sobre card-frame-3x3.png). */
+.board-card--3x3 {
+  --frame-src: url('/card-frame-3x3.png');
+  --grid-top: 26.5%;
+  --grid-left: 13%;
+  --grid-width: 73.7%;
+  --grid-height: 59.5%;
+}
+
+/* Grid posicionado sobre las cajas dibujadas en el marco. */
+.board-card__grid {
+  position: absolute;
+  top: var(--grid-top);
+  left: var(--grid-left);
+  width: var(--grid-width);
+  height: var(--grid-height);
+  display: grid;
+  place-content: stretch;
+}
+
+.board-card__grid--3x3 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.board-card__grid--4x4 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+/* Celdas transparentes: el recuadro lo pone la imagen; solo montamos el número. */
+.board-card__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #111;
+}
+
+.board-card__grid--3x3 .board-card__cell {
+  font-size: clamp(1.6rem, 16cqw, 4.5rem);
+}
+
+.board-card__grid--4x4 .board-card__cell {
+  font-size: clamp(1.4rem, 11cqw, 3.2rem);
+}
+
+/* Empty state */
+.generator-empty {
+  color: #9ca3af;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* ── Print styles ────────────────────────────────────────────────────── */
+@media print {
+  /* Hoja horizontal. */
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  /* Imprimir la imagen de fondo del marco (si no, sale en blanco). */
+  .board-card {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ocultar todo lo que no sea cartón. */
+  .generator-form,
+  .generator-view > h1,
+  .generator-empty {
+    display: none !important;
+  }
+
+  .generator-view {
+    padding: 0;
+  }
+
+  /* Dos cartones por hoja, lado a lado. */
+  .boards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10mm;
+    padding: 0;
+    align-content: flex-start;
+  }
+
+  .board-card {
+    flex: 0 0 calc(50% - 5mm); /* mitad del ancho menos medio gap */
+    aspect-ratio: var(--frame-ratio, 1122 / 1402);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Salto de página tras cada par → exactamente 2 por hoja. */
+  .board-card:nth-child(2n) {
+    break-after: page;
+    page-break-after: always;
+  }
+}
