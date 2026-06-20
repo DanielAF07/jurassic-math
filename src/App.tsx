@@ -12,9 +12,12 @@ export default function App() {
     <div className="app">
       <header className="app-header no-print">
         <div className="app-header__brand">
-          <span className="app-header__mark" aria-hidden="true">
-            🦖
-          </span>
+          <img
+            className="app-header__mark"
+            src="/logo.png"
+            alt=""
+            aria-hidden="true"
+          />
           <span className="app-header__title">Jurassic Math</span>
         </div>
 

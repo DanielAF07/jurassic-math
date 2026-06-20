@@ -21,20 +21,12 @@
   gap: 0.6rem;
 }
 
-/* Marca: cuadradito con el accent, como logo. */
+/* Marca: el logo del dino. */
 .app-header__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-size: 1.25rem;
-  font-weight: 800;
-  line-height: 1;
-  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: contain;
+  display: block;
 }
 
 .app-header__title {
