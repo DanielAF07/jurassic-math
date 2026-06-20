@@ -88,7 +88,7 @@ export function CallerView({
           </>
         ) : (
           <span className="caller__placeholder">
-            Tocá "Cantar" para empezar
+            Toca "Cantar" para empezar
           </span>
         )}
       </div>

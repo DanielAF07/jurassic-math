@@ -31,7 +31,7 @@ export function GeneratorView({
 
       {boards.length === 0 ? (
         <p className="generator-empty">
-          Configurá el formulario y hacé clic en <strong>Generar</strong> para crear los cartones.
+          Configura el formulario y haz clic en <strong>Generar</strong> para crear los cartones.
         </p>
       ) : (
         <div className="boards-grid">

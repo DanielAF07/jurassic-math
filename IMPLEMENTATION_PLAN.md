@@ -2,7 +2,7 @@
 
 App web client-only (React + Vite + TypeScript) para un juego educativo de tablas de multiplicar. Tiene dos secciones: un **Generador de cartones** imprimibles y una **Pantalla de juego ("el cantor")** que canta números/operaciones sin reemplazo. Arquitectura limpia con dominio puro testeado (Vitest) separado de la presentación (container/presentational).
 
-> **Tareas pensadas para devs jr.** Cada tarea es chica, secuencial y con criterios de aceptación claros. NO hagas la siguiente sin terminar la anterior. NO infieras: copiá los snippets tal cual. Si algo no está en el plan, NO lo agregues (revisá "Fuera de scope").
+> **Tareas pensadas para devs jr.** Cada tarea es chica, secuencial y con criterios de aceptación claros. NO hagas la siguiente sin terminar la anterior. NO infieras: copia los snippets tal cual. Si algo no está en el plan, NO lo agregues (revisa "Fuera de scope").
 
 ---
 
@@ -162,7 +162,7 @@ Editar `src/main.tsx` para que el import de `App` apunte a la nueva ruta. Reempl
 import App from './presentation/app/App.tsx'
 ```
 
-Editar `src/presentation/app/App.tsx`: si tiene `import './App.css'` dejalo igual (ahora `App.css` está en la misma carpeta, la ruta relativa `./App.css` sigue siendo válida). Si tenía `import reactLogo from './assets/react.svg'` o similar, podés borrar esos imports y el JSX que los usa; en la Task 11 reescribimos `App.tsx` por completo, así que por ahora solo asegurate de que compile.
+Editar `src/presentation/app/App.tsx`: si tiene `import './App.css'` déjalo igual (ahora `App.css` está en la misma carpeta, la ruta relativa `./App.css` sigue siendo válida). Si tenía `import reactLogo from './assets/react.svg'` o similar, puedes borrar esos imports y el JSX que los usa; en la Task 11 reescribimos `App.tsx` por completo, así que por ahora solo asegúrate de que compile.
 
 **Notas**:
 - NO muevas `main.tsx` ni `index.css` (quedan en `src/`).
@@ -1425,7 +1425,7 @@ export function CallerView({
       </div>
 
       <div className="caller__current">
-        {current ? current.display : 'Tocá "Cantar" para empezar'}
+        {current ? current.display : 'Toca "Cantar" para empezar'}
       </div>
 
       <div className="caller__actions">
@@ -1755,7 +1755,7 @@ Editar `src/index.css`: la plantilla de Vite suele poner en `body` un `display: 
 
 **Notas**:
 - El objetivo es que el contenido ocupe el ancho completo, no quede centrado en una columna angosta.
-- Si tu `index.css` no tiene esos bloques (versión distinta de la plantilla), no pasa nada: solo asegurate de que el layout no quede centrado/angosto.
+- Si tu `index.css` no tiene esos bloques (versión distinta de la plantilla), no pasa nada: solo asegúrate de que el layout no quede centrado/angosto.
 
 **Criterios de aceptación**:
 - El header se ve arriba, ancho completo, con título a la izquierda y nav a la derecha.
