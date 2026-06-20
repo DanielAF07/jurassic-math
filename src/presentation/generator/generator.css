@@ -96,10 +96,7 @@
 .board-card {
   container-type: inline-size; /* habilita unidades cqw para el texto */
   position: relative;
-  aspect-ratio: var(--frame-ratio, 1122 / 1402); /* proporción del PNG */
-  background-image: var(--frame-src, url('/card-frame.png'));
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  aspect-ratio: var(--frame-ratio, 1122 / 1402); /* proporción del marco */
   page-break-inside: avoid;
   break-inside: avoid;
 
@@ -112,13 +109,23 @@
   --grid-height: 63.1%;
 }
 
-/* Modo 3x3: otro marco y otra ventana (medidos sobre card-frame-3x3.png). */
+/* Modo 3x3: otra ventana (medida sobre card-frame-3x3). El marco lo elige el
+   componente vía <img src>. */
 .board-card--3x3 {
-  --frame-src: url('/card-frame-3x3.png');
   --grid-top: 26.5%;
   --grid-left: 13%;
   --grid-width: 73.7%;
   --grid-height: 59.5%;
+}
+
+/* Marco como <img> real (no background): permite onError/reintento en celular. */
+.board-card__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* el ratio del contenedor ya coincide con el del marco */
+  z-index: 0;
 }
 
 /* Grid posicionado sobre las cajas dibujadas en el marco. */
@@ -130,6 +137,7 @@
   height: var(--grid-height);
   display: grid;
   place-content: stretch;
+  z-index: 1;
 }
 
 .board-card__grid--3x3 {
@@ -175,7 +183,7 @@
     margin: 10mm;
   }
 
-  /* Imprimir la imagen de fondo del marco (si no, sale en blanco). */
+  /* Forzar fidelidad de color al imprimir el marco. */
   .board-card {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
