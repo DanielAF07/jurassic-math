@@ -1,0 +1,46 @@
+/* Reset / base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Accent de la app. Verde jungla: temática jurásica (vegetación, selva). */
+  --accent: #3fa34d;
+  --accent-strong: #2f8f3e;
+  --accent-contrast: #ffffff;
+  /* RGB del accent para sombras/halos con alpha. */
+  --accent-rgb: 63, 163, 77;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* ========================================
+   @media print — estilos globales
+   Oculta la navegación y los controles;
+   el layout de impresión de cada cartón
+   lo maneja el CSS propio del Generador.
+   ======================================== */
+@media print {
+  .no-print,
+  .app-nav,
+  .generator-form,
+  button {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .app-main {
+    padding: 0;
+  }
+}
