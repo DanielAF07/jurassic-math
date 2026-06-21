@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo.png" alt="Jurassic Math" width="200" />
+</p>
+
 # 🦖 Jurassic Math — Lotería para practicar matemáticas
 
 Lotería (bingo) de salón para practicar **cálculo mental** jugando. La app genera tableros imprimibles y trae un **cantor** que saca operaciones al azar, sin repetir, hasta agotar el mazo. Dos modos según lo que quieras ejercitar:
