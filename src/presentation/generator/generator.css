@@ -214,6 +214,8 @@
     aspect-ratio: var(--frame-ratio, 1122 / 1402);
     break-inside: avoid;
     page-break-inside: avoid;
+    /* Borde de corte para recortar cada cartón. */
+    border: 2px solid #000;
   }
 
   /* Salto de página tras cada par → exactamente 2 por hoja. */
