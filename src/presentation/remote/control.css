@@ -1,53 +1,169 @@
 .control {
   max-width: 28rem;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.25rem 1rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
   display: flex;
   flex-direction: column;
   gap: 1rem;
   min-height: 100dvh;
+  box-sizing: border-box;
 }
-.control__title { font-size: 1.4rem; margin: 0; }
-.control__hint { opacity: 0.7; margin: 0; }
-.control__join { display: flex; gap: 0.5rem; }
+
+.control__title {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.control__hint {
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Join screen: columna en mobile → más fácil de usar con una mano */
+.control__join {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .control__input {
-  flex: 1;
-  font-size: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 2.2rem;
   text-align: center;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  padding: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  min-height: 64px;
+  border-radius: 0.75rem;
 }
-.control__connect, .control__next, .control__reset, .control__leave {
-  font-size: 1.1rem;
-  padding: 0.75rem 1rem;
+
+.control__connect {
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.85rem 1rem;
+  min-height: 52px;
+  border-radius: 0.75rem;
   cursor: pointer;
 }
-.control__bar { display: flex; align-items: center; gap: 0.5rem; }
+
+/* Header: dot + sala + salir */
+.control__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
 .control__dot {
-  width: 0.75rem; height: 0.75rem; border-radius: 50%;
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
   background: #888;
 }
-.control__dot--on { background: #34d399; }
-.control__room { font-weight: 700; letter-spacing: 0.1em; }
-.control__leave { margin-left: auto; }
-.control__waiting { opacity: 0.7; }
+
+.control__dot--on {
+  background: #34d399;
+}
+
+.control__room {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.control__leave {
+  margin-left: auto;
+  font-size: 1rem;
+  padding: 0.5rem 0.85rem;
+  min-height: 44px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.control__waiting {
+  opacity: 0.7;
+}
+
+/* Operación actual: card prominente centrada */
 .control__current {
-  display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
-  padding: 1.5rem; border: 2px solid currentColor; border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 1rem;
+  border: 2px solid currentColor;
+  border-radius: 1rem;
+  text-align: center;
 }
-.control__current-label { opacity: 0.6; font-size: 0.9rem; }
-.control__current-op { font-size: 2.5rem; font-weight: 800; }
-.control__current-res { font-size: 1.5rem; opacity: 0.85; }
-.control__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.control__next { font-size: 1.4rem; }
+
+.control__current-label {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.control__current-op {
+  font-size: clamp(2.5rem, 14vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.control__current-res {
+  font-size: clamp(1.2rem, 5vw, 1.6rem);
+  opacity: 0.85;
+}
+
+/* Acciones: Siguiente domina, Reiniciar es claramente secundario */
+.control__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.control__next {
+  width: 100%;
+  font-size: clamp(1.4rem, 6vw, 1.8rem);
+  font-weight: 900;
+  padding: 1.25rem 1rem;
+  min-height: 80px;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.control__reset {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+  border-radius: 0.75rem;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+/* Historial */
 .control__history-list {
-  list-style: none; padding: 0; margin: 0;
-  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
+
 .control__chip {
-  display: inline-flex; gap: 0.25rem; align-items: baseline;
-  padding: 0.3rem 0.5rem; border-radius: 0.5rem;
-  background: rgba(127,127,127,0.15);
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: baseline;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgba(127, 127, 127, 0.15);
+  font-size: 0.95rem;
 }
-.control__chip--latest { background: rgba(52,211,153,0.25); font-weight: 700; }
+
+.control__chip--latest {
+  background: rgba(52, 211, 153, 0.25);
+  font-weight: 700;
+}
