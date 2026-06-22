@@ -1,0 +1,556 @@
+/* ===== Pantallón (TV): pantalla de presentación, solo la operación ===== */
+
+.tv {
+  width: 100%;
+}
+
+/* En "playing" toma toda la pantalla (encima del header) para la tele;
+   funciona aunque el navegador rechace la pantalla completa nativa. */
+.tv--playing {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #0a1f12;
+}
+
+/* ---------- Setup: elegir modo y arrancar ---------- */
+.tv__setup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 8rem);
+  padding: 2rem 1rem;
+  border-radius: 18px;
+  overflow: hidden;
+  background: url('/tv/scene-jungle.png') center / cover no-repeat;
+}
+
+.tv__setup::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(6, 18, 10, 0.55), rgba(6, 18, 10, 0.72));
+}
+
+.tv__setup-card {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  background: rgba(8, 20, 12, 0.7);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.tv__setup-mascot {
+  height: 130px;
+  width: auto;
+  margin-top: -4.5rem;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.4));
+  animation: tv-bob 3s ease-in-out infinite;
+}
+
+.tv__title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.tv__subtitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tv__modes {
+  display: flex;
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.tv__mode {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.tv__mode:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tv__mode--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4);
+}
+
+.tv__mode-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.tv__mode-sub {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.tv__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tv__toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.tv__toggle-track {
+  position: relative;
+  flex: 0 0 auto;
+  width: 3.25rem;
+  height: 1.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.18s ease;
+}
+
+.tv__toggle-thumb {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease;
+}
+
+.tv__toggle-input:checked + .tv__toggle-track {
+  background: var(--accent);
+}
+
+.tv__toggle-input:checked + .tv__toggle-track .tv__toggle-thumb {
+  transform: translateX(1.4rem);
+}
+
+.tv__toggle-input:focus-visible + .tv__toggle-track {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.tv__start {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.45);
+  transition: background 0.15s, transform 0.12s;
+}
+
+.tv__start:hover {
+  background: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
+.tv__start:active {
+  transform: translateY(0);
+}
+
+.tv__hint-kbd {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.tv__hint-kbd kbd {
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  font-family: inherit;
+}
+
+/* ---------- Stage: el juego en la tele ---------- */
+.tv__stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+.tv__stage--idle {
+  cursor: none;
+}
+
+.tv__bg {
+  position: absolute;
+  inset: 0;
+  background: url('/tv/scene-jungle.png') center / cover no-repeat;
+}
+
+.tv__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(rgba(6, 18, 10, 0.2), rgba(6, 18, 10, 0.45));
+}
+
+/* Dinos decorativos en las esquinas, flotando suave. */
+.tv__decor {
+  position: absolute;
+  z-index: 2;
+  width: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.4));
+}
+
+.tv__decor--stegosaurus {
+  top: 3vh;
+  left: 3vw;
+  height: 22vh;
+  animation: tv-float 7s ease-in-out infinite;
+}
+
+.tv__decor--brachiosaurus {
+  top: 2vh;
+  right: 3vw;
+  height: 26vh;
+  animation: tv-float 6s ease-in-out infinite reverse;
+}
+
+.tv__decor--triceratops {
+  bottom: 2vh;
+  left: 3vw;
+  height: 25vh;
+  animation: tv-float 5.5s ease-in-out infinite;
+}
+
+.tv__progress {
+  position: absolute;
+  top: 3vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 0.4em 1em;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(8, 20, 12, 0.7);
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(1rem, 2.4vw, 1.8rem);
+  letter-spacing: 0.04em;
+}
+
+/* Zona central: huevo -> huevo roto -> operación.
+   El huevo se posiciona absoluto encima; la operación queda en el flujo y es
+   la que define el centro, así el cross-fade no salta de lugar. */
+.tv__reveal {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv__eggs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv__egg {
+  position: absolute;
+  height: clamp(150px, 30vh, 320px);
+  width: auto;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
+}
+
+.tv__egg.is-on {
+  opacity: 1;
+}
+
+.tv__egg--whole.is-on {
+  animation: tv-wobble 2.4s ease-in-out infinite;
+}
+
+.tv__egg--cracked.is-on {
+  animation: tv-shake 0.5s ease-in-out infinite;
+}
+
+.tv__op {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.16em;
+  padding: 0.18em 0.42em;
+  border: 0.1em solid var(--accent);
+  border-radius: 0.26em;
+  background: rgba(7, 17, 11, 0.74);
+  box-shadow:
+    inset 0 0 0 0.04em rgba(255, 255, 255, 0.15),
+    0 1.2em 3em rgba(0, 0, 0, 0.5),
+    0 0 4em rgba(var(--accent-rgb), 0.35);
+  font-size: clamp(4rem, 18vw, 16rem);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 0.2s ease;
+}
+
+.tv__op.is-on {
+  animation: tv-pop 0.5s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.tv__num {
+  color: #fff;
+  text-shadow: 0 0.04em 0.12em rgba(0, 0, 0, 0.5);
+}
+
+.tv__sym {
+  padding: 0 0.05em;
+  color: #ffcf33;
+  text-shadow: 0 0.04em 0.12em rgba(0, 0, 0, 0.5);
+}
+
+/* Mascota: poses apiladas con cross-fade según el estado del juego. */
+.tv__mascot {
+  position: absolute;
+  right: 2vw;
+  bottom: 1vh;
+  z-index: 3;
+  height: clamp(200px, 38vh, 460px);
+  aspect-ratio: 1 / 1;
+  pointer-events: none;
+  animation: tv-bob 3s ease-in-out infinite;
+}
+
+.tv__mascot-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+
+.tv__mascot-img.is-on {
+  opacity: 1;
+}
+
+.tv__cue {
+  position: absolute;
+  bottom: 11vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  margin: 0;
+  padding: 0.3em 1em;
+  border-radius: 999px;
+  background: rgba(8, 20, 12, 0.45);
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(1rem, 2.6vw, 2rem);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  animation: tv-cue-pulse 1.8s ease-in-out infinite;
+}
+
+/* Barra de controles: se auto-oculta tras 3s sin mover el mouse. */
+.tv__bar {
+  position: absolute;
+  bottom: 2.2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(6, 16, 10, 0.82);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tv__stage--idle .tv__bar {
+  opacity: 0;
+  transform: translate(-50%, 1rem);
+  pointer-events: none;
+}
+
+.tv__bar button {
+  padding: 0.5rem 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tv__bar button:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.tv__bar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tv__bar-kbd {
+  padding-left: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes tv-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes tv-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1.5deg); }
+}
+
+@keyframes tv-wobble {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes tv-shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-7px) rotate(-3deg); }
+  75% { transform: translateX(7px) rotate(3deg); }
+}
+
+@keyframes tv-pop {
+  0% { opacity: 0; transform: scale(0.3); }
+  60% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tv-cue-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Código de sala para el control remoto del celu. Pill oscura arriba-izquierda
+   (mismo lenguaje visual que .tv__bar), con el QR en tarjeta blanca para que
+   sea escaneable contra la escena. Queda siempre visible (no se auto-oculta). */
+.tv__room {
+  position: absolute;
+  top: 3vh;
+  left: 3vw;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(6, 16, 10, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.tv__room-text {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+.tv__room-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tv__room-code {
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+}
+
+.tv__room-qr {
+  padding: 0.35rem;
+  border-radius: 8px;
+  background: #fff;
+  line-height: 0;
+}
+
+/* Respeta el "menos movimiento" del sistema. */
+@media (prefers-reduced-motion: reduce) {
+  .tv__setup-mascot,
+  .tv__decor,
+  .tv__mascot,
+  .tv__egg.is-on,
+  .tv__cue {
+    animation: none !important;
+  }
+  .tv__op.is-on {
+    animation: none !important;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
