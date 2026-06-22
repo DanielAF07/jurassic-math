@@ -20,6 +20,7 @@ interface TvViewProps {
   exhausted: boolean
   isFullscreen: boolean
   roomCode: string | null
+  roomCodeVisible: boolean
   onModeChange: (mode: CallerMode) => void
   onExcludeTrivialChange: (value: boolean) => void
   onStart: () => void
@@ -57,6 +58,7 @@ export function TvView({
   exhausted,
   isFullscreen,
   roomCode,
+  roomCodeVisible,
   onModeChange,
   onExcludeTrivialChange,
   onStart,
@@ -182,7 +184,7 @@ export function TvView({
           </div>
 
           {roomCode && (
-            <div className="tv__room">
+            <div className={roomCodeVisible ? 'tv__room' : 'tv__room tv__room--hidden'}>
               <div className="tv__room-text">
                 <span className="tv__room-label">Control en el celu</span>
                 <span className="tv__room-code">{roomCode}</span>
@@ -251,7 +253,7 @@ export function TvView({
               ✕ Salir
             </button>
             <span className="tv__bar-kbd">
-              Espacio / Enter = siguiente · R = reiniciar
+              Espacio / Enter = siguiente · R = reiniciar · C = código
             </span>
           </div>
         </div>

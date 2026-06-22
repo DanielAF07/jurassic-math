@@ -513,6 +513,15 @@
   border-radius: 14px;
   background: rgba(6, 16, 10, 0.82);
   backdrop-filter: blur(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Oculto: se desvanece sin desmontar (el canal sigue vivo). La tecla C lo
+   vuelve a mostrar; conectarse un celu lo oculta. */
+.tv__room--hidden {
+  opacity: 0;
+  transform: translateY(-0.6rem);
+  pointer-events: none;
 }
 
 .tv__room-text {

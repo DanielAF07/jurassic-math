@@ -44,6 +44,7 @@ export function TvContainer() {
     snapshot,
     onNext: tv.advance,
     onReset: tv.restart,
+    onControlJoined: tv.hideRoomCode,
   })
 
   return (
@@ -60,6 +61,7 @@ export function TvContainer() {
       exhausted={tv.exhausted}
       isFullscreen={tv.isFullscreen}
       roomCode={tv.roomCode}
+      roomCodeVisible={tv.roomCodeVisible}
       onModeChange={(m) => tv.setMode(m)}
       onExcludeTrivialChange={(v) => tv.setExcludeTrivial(v)}
       onStart={tv.start}

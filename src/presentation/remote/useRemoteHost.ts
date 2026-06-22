@@ -11,6 +11,8 @@ interface UseRemoteHostArgs {
   onNext: () => void
   /** Qué hacer cuando el control pide "reiniciar". */
   onReset: () => void
+  /** Se llama cuando un control (celu) se une a la sala (recibe control:hello). */
+  onControlJoined?: () => void
 }
 
 /**
@@ -18,7 +20,13 @@ interface UseRemoteHostArgs {
  * ejecuta los comandos que llegan del celu. El Pantallón sigue siendo la
  * autoridad del estado; esto es solo un transporte.
  */
-export function useRemoteHost({ code, snapshot, onNext, onReset }: UseRemoteHostArgs) {
+export function useRemoteHost({
+  code,
+  snapshot,
+  onNext,
+  onReset,
+  onControlJoined,
+}: UseRemoteHostArgs) {
   const connRef = useRef<RoomConnection | null>(null)
 
   // Refs para que el listener (suscrito una sola vez por code) siempre vea el
@@ -29,6 +37,8 @@ export function useRemoteHost({ code, snapshot, onNext, onReset }: UseRemoteHost
   onNextRef.current = onNext
   const onResetRef = useRef(onReset)
   onResetRef.current = onReset
+  const onControlJoinedRef = useRef(onControlJoined)
+  onControlJoinedRef.current = onControlJoined
 
   // Conexión al canal: se rehace solo si cambia el code.
   useEffect(() => {
@@ -37,6 +47,8 @@ export function useRemoteHost({ code, snapshot, onNext, onReset }: UseRemoteHost
       if (message.kind === 'control:hello') {
         // Late join: el celu pide el estado actual → se lo mandamos.
         connRef.current?.send({ kind: 'host:snapshot', snapshot: snapshotRef.current })
+        // Hay alguien controlando → la TV puede ocultar el code/QR.
+        onControlJoinedRef.current?.()
       } else if (message.kind === 'control:command') {
         if (message.command.type === 'next') onNextRef.current()
         else if (message.command.type === 'reset') onResetRef.current()

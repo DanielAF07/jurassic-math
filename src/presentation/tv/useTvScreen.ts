@@ -9,6 +9,8 @@ export type MascotPose = 'idle' | 'roar' | 'think' | 'celebrate'
 const HATCH_MS = 620
 /** ms tras revelar para que el dino pase de "rugido" a "pensando". */
 const THINK_DELAY_MS = 1700
+/** ms que el room code + QR quedan visibles antes de auto-ocultarse. */
+const ROOM_CODE_VISIBLE_MS = 30000
 
 /**
  * Orquesta el Pantallón (pantalla de TV). Reutiliza TODA la lógica de mazo de
@@ -40,6 +42,7 @@ export function useTvScreen() {
   const [pose, setPose] = useState<MascotPose>('idle')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [roomCode, setRoomCode] = useState<string | null>(null)
+  const [roomCodeVisible, setRoomCodeVisible] = useState(false)
 
   // Timers de la eclosión. Se limpian en cada avance y al desmontar para que un
   // avance rápido no deje callbacks viejos pisando el estado.
@@ -53,6 +56,10 @@ export function useTvScreen() {
   // sorteos. Se libera recién cuando la operación quedó revelada (HATCH_MS),
   // lo que además marca un ritmo mínimo entre cantos.
   const locked = useRef(false)
+
+  // Timer del room code: SEPARADO de `timers` (animación) para que un avance no
+  // lo cancele. El code/QR se auto-oculta tras ROOM_CODE_VISIBLE_MS.
+  const roomCodeTimer = useRef<number | undefined>(undefined)
 
   // ----- Pantalla completa -----
   const enterFullscreen = useCallback(() => {
@@ -72,6 +79,22 @@ export function useTvScreen() {
     return () => document.removeEventListener('fullscreenchange', sync)
   }, [])
 
+  // ----- Room code / QR del control remoto -----
+  // Mostrar = visible + (re)arranca el timer de auto-ocultado.
+  const showRoomCode = useCallback(() => {
+    window.clearTimeout(roomCodeTimer.current)
+    setRoomCodeVisible(true)
+    roomCodeTimer.current = window.setTimeout(
+      () => setRoomCodeVisible(false),
+      ROOM_CODE_VISIBLE_MS
+    )
+  }, [])
+  // Ocultar = apaga el timer y esconde (lo usa el host al conectarse un celu).
+  const hideRoomCode = useCallback(() => {
+    window.clearTimeout(roomCodeTimer.current)
+    setRoomCodeVisible(false)
+  }, [])
+
   // ----- Acciones -----
   const start = useCallback(() => {
     clearTimers()
@@ -80,9 +103,10 @@ export function useTvScreen() {
     setReveal('egg')
     setPose('idle')
     setRoomCode(generateRoomCode())
+    showRoomCode()
     setPhase('playing')
     enterFullscreen()
-  }, [clearTimers, reset, enterFullscreen])
+  }, [clearTimers, reset, enterFullscreen, showRoomCode])
 
   const advance = useCallback(() => {
     if (locked.current || exhausted) return
@@ -116,16 +140,19 @@ export function useTvScreen() {
     setReveal('egg')
     setPose('idle')
     setRoomCode(null)
+    hideRoomCode()
     setPhase('setup')
-  }, [clearTimers, exitFullscreen, reset])
+  }, [clearTimers, exitFullscreen, reset, hideRoomCode])
 
   // ----- Teclado (solo mientras se juega) -----
   // Refs para que el listener (suscrito una vez por fase) siempre llame a la
   // última versión de las acciones sin re-suscribirse en cada render.
   const advanceRef = useRef(advance)
   const restartRef = useRef(restart)
+  const showRoomCodeRef = useRef(showRoomCode)
   advanceRef.current = advance
   restartRef.current = restart
+  showRoomCodeRef.current = showRoomCode
 
   useEffect(() => {
     if (phase !== 'playing') return
@@ -137,6 +164,10 @@ export function useTvScreen() {
       } else if (e.key === 'r' || e.key === 'R') {
         e.preventDefault()
         restartRef.current()
+      } else if (e.key === 'c' || e.key === 'C') {
+        // Volver a mostrar el code/QR (p. ej. si nadie se conectó y se ocultó).
+        e.preventDefault()
+        showRoomCodeRef.current()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -144,6 +175,7 @@ export function useTvScreen() {
   }, [phase])
 
   useEffect(() => () => clearTimers(), [clearTimers])
+  useEffect(() => () => window.clearTimeout(roomCodeTimer.current), [])
 
   // Al agotarse el mazo el dino festeja, sin importar la pose de la animación.
   const mascotPose: MascotPose = exhausted ? 'celebrate' : pose
@@ -164,6 +196,8 @@ export function useTvScreen() {
     exhausted,
     isFullscreen,
     roomCode,
+    roomCodeVisible,
+    hideRoomCode,
     start,
     advance,
     restart,
