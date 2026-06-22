@@ -1,54 +1,23 @@
-import { useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { Layout } from './presentation/Layout'
 import { GeneratorContainer } from './presentation/generator/GeneratorContainer'
 import { CallerContainer } from './presentation/caller/CallerContainer'
+import { TvContainer } from './presentation/tv/TvContainer'
+import { ControlContainer } from './presentation/remote/ControlContainer'
 import './app.css'
 
-type Tab = 'generator' | 'caller'
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('generator')
-
   return (
-    <div className="app">
-      <header className="app-header no-print">
-        <div className="app-header__brand">
-          <img
-            className="app-header__mark"
-            src="/logo.png"
-            alt=""
-            aria-hidden="true"
-          />
-          <span className="app-header__title">Jurassic Math</span>
-        </div>
-
-        <nav className="app-nav" aria-label="Secciones">
-          <button
-            className={
-              activeTab === 'generator'
-                ? 'app-nav__tab app-nav__tab--active'
-                : 'app-nav__tab'
-            }
-            onClick={() => setActiveTab('generator')}
-          >
-            Cartones
-          </button>
-          <button
-            className={
-              activeTab === 'caller'
-                ? 'app-nav__tab app-nav__tab--active'
-                : 'app-nav__tab'
-            }
-            onClick={() => setActiveTab('caller')}
-          >
-            El cantor
-          </button>
-        </nav>
-      </header>
-
-      <main className="app-main">
-        {activeTab === 'generator' && <GeneratorContainer />}
-        {activeTab === 'caller' && <CallerContainer />}
-      </main>
-    </div>
+    <Routes>
+      {/* Control remoto del celu: vista limpia, fuera del Layout con nav. */}
+      <Route path="/control" element={<ControlContainer />} />
+      <Route element={<Layout />}>
+        <Route index element={<Navigate to="/cartones" replace />} />
+        <Route path="cartones" element={<GeneratorContainer />} />
+        <Route path="cantor" element={<CallerContainer />} />
+        <Route path="pantallon" element={<TvContainer />} />
+        <Route path="*" element={<Navigate to="/cartones" replace />} />
+      </Route>
+    </Routes>
   )
 }

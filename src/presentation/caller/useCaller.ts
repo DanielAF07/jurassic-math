@@ -120,6 +120,8 @@ export function useCaller() {
     setExcludeTrivial,
     current,
     history,
+    total: values.length,
+    drawn: deck.drawn.length,
     exhausted,
     callNext,
     reset,
